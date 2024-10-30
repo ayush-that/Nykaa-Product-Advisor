@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Use - Nykaa Product Advisor</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+
+<body class="dark min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 flex-grow">
+        <div class="text-center mb-4">
+            <h1
+                class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 font-bricolage mt-6">
+                How to Use
+            </h1>
+            <p class="text-gray-400 mt-2 text-base">
+                Learn how to get the most out of Nykaa Product Advisor 🎯
+            </p>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+            <div class="card rounded-lg shadow-lg p-6 mb-6">
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-semibold mb-2 font-bricolage text-pink-500">Step 1: Find a Product</h2>
+                        <p class="text-gray-300">Visit Nykaa.com and copy the URL of any product page you're interested
+                            in.</p>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-semibold mb-2 font-bricolage text-pink-500">Step 2: Analyze the Product
+                        </h2>
+                        <p class="text-gray-300">Paste the URL in the input field and click "Analyze". Our AI will
+                            process the product information.</p>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-semibold mb-2 font-bricolage text-pink-500">Step 3: Ask for
+                            Recommendations</h2>
+                        <p class="text-gray-300">Describe your skincare needs and preferences. Be specific about your
+                            skin type and concerns.</p>
+                    </div>
+
+                    <div>
+                        <h2 class="text-xl font-semibold mb-2 font-bricolage text-pink-500">Step 4: Get Personalized
+                            Advice</h2>
+                        <p class="text-gray-300">Review your personalized recommendation, including product details and
+                            usage instructions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="{{ url_for('index') }}"
+                    class="inline-block bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all duration-300 font-bricolage transform hover:scale-105">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-2">
+        <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+            <p>Made with ❤️ by
+                <a href="https://x.com/shydev69" class="text-pink-500 hover:text-pink-400 transition-colors">Ayush</a>
+                •
+                <a href="https://github.com/ayush-that/Nykaa-Product-Advisor/"
+                    class="text-pink-500 hover:text-pink-400 transition-colors">
+                    Source Code
+                </a>
+            </p>
+        </div>
+    </footer>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+</body>
+
+</html>

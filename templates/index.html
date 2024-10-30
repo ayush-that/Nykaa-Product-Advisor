@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nykaa Product Advisor</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+
+<body class="dark min-h-screen flex flex-col">
+    <div class="container mx-auto px-4 flex-grow">
+        <div class="text-center mb-4" data-aos="fade-down">
+            <h1
+                class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 font-bricolage mt-6">
+                💄 Nykaa Product Advisor
+            </h1>
+            <a href="{{ url_for('how_to_use') }}"
+                class="inline-block mt-2 text-pink-500 hover:text-pink-400 transition-colors text-base">
+                Learn More →
+            </a>
+        </div>
+
+        <div class="max-w-2xl mx-auto mb-8">
+            <div class="card rounded-lg shadow-lg p-6">
+                <div class="space-y-4">
+                    <div class="border-b border-gray-700 pb-2">
+                        <h2 class="text-lg font-semibold font-bricolage text-pink-500">How to Use 📖</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex items-start gap-3">
+                            <span class="text-pink-500">1.</span>
+                            <p class="text-base text-gray-300">Find a product on Nykaa.com and copy its URL</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-pink-500">2.</span>
+                            <p class="text-base text-gray-300">Paste URL and click "Analyze" to process product info</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-pink-500">3.</span>
+                            <p class="text-base text-gray-300">Describe your skincare needs and preferences</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="text-pink-500">4.</span>
+                            <p class="text-base text-gray-300">Get personalized product recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto">
+            <div class="card rounded-lg shadow-lg p-6 mb-6" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="text-xl font-semibold mb-4 font-bricolage">Enter Product URL</h2>
+                <div class="flex gap-4">
+                    <input type="text" id="url" placeholder="https://www.nykaa.com/..."
+                        class="flex-1 p-3 rounded-lg input-beautiful">
+                    <button onclick="analyzeUrl()" id="analyzeBtn"
+                        class="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition-all duration-300 font-bricolage transform hover:scale-105">
+                        Analyze
+                    </button>
+                </div>
+            </div>
+
+            <div id="recommendationSection" class="card rounded-lg shadow-lg p-6 hidden" data-aos="fade-up">
+                <h2 class="text-xl font-semibold mb-4 font-bricolage">Ask for Recommendations</h2>
+                <textarea id="question" rows="4"
+                    placeholder="I have oily skin and need a moisturizer that won't clog my pores."
+                    class="w-full p-3 rounded-lg mb-4 input-beautiful"></textarea>
+                <button onclick="getRecommendation()" id="recommendBtn"
+                    class="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-3 rounded-lg hover:opacity-90 transition-all duration-300 font-bricolage transform hover:scale-105">
+                    Get Recommendations
+                </button>
+            </div>
+
+            <div id="result" class="mt-6"></div>
+        </div>
+    </div>
+
+    <footer class="py-2">
+        <div class="container mx-auto px-4 text-center text-gray-400 text-sm">
+            <p>Made with ❤️ by
+                <a href="https://x.com/shydev69" class="text-pink-500 hover:text-pink-400 transition-colors">Ayush</a>
+                •
+                <a href="https://github.com/ayush-that/Nykaa-Product-Advisor/"
+                    class="text-pink-500 hover:text-pink-400 transition-colors">
+                    Source Code
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+body {
+    font-family: 'DM Sans', 'Segoe UI', system-ui, sans-serif;
+    font-size: 0.95rem;
+}
+
+.font-bricolage {
+    font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.dark {
+    background-color: #111827;
+    color: #e5e7eb;
+}
+
+.dark .card {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+.dark input,
+.dark textarea {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+    color: #9ca3af;
+}
+
+.recommendation-content {
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+.recommendation-content h2 {
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #ec4899;
+}
+
+.recommendation-content ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.input-beautiful {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    transition: all 0.3s ease;
+}
+
+.input-beautiful:focus {
+    border-color: rgba(236, 72, 153, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(236, 72, 153, 0.37);
+    outline: none;
+}
+
+body.dark {
+    background-color: #111827;
+    color: #ffffff;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.card {
+    background-color: rgba(17, 24, 39, 0.8);
+    border: 1px solid #374151;
+}
+
+.input-beautiful {
+    background-color: rgba(17, 24, 39, 0.8);
+    border: 1px solid #374151;
+    color: #ffffff;
+}
+
+.input-beautiful:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.text-gray-400 {
+    font-size: 0.9rem;
+}
+
+.text-sm {
+    font-size: 0.85rem;
+}

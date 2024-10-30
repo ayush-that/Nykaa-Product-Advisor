@@ -1,4 +1,4 @@
-streamlit
+flask
 langchain
 langchain_ollama
 selenium
