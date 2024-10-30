@@ -15,5 +15,5 @@ https://github.com/user-attachments/assets/73810c2c-b434-41dd-90d3-aedc944497b9
 ### ⚠️ Note
 
 -> Bring your own API keys.<br>
--> Completed from my site, feedback appreciated.
+-> Completed from my side, feedback appreciated.
 
