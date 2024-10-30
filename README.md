@@ -2,7 +2,7 @@
 
 This project is a product recommendation tool. If you provide it with a Nykaa URL and a query, it will recommend the best product for your use case. 
 
-### Demo
+### 🔊 Demo (Sound On)
 
 https://github.com/user-attachments/assets/73810c2c-b434-41dd-90d3-aedc944497b9
 
