@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 load_dotenv()
 
@@ -22,7 +23,7 @@ def scrape_website(website):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     print("Initializing WebDriver...")
-    service = Service(executable_path="/usr/bin/chromedriver")
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     try:
         print("Navigating to website...")
