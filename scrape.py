@@ -1,43 +1,49 @@
-from playwright.sync_api import sync_playwright
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-AUTH = os.getenv("AUTH")
-SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
-
 
 def scrape_website(website):
-    print("\nStarting scraping process...")
+    """Scrape website content using headless Chrome"""
+    print("Setting up Chrome options...")
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+
+    if os.environ.get("CHROME_BIN"):
+        options.binary_location = os.environ.get("CHROME_BIN")
+
+    print("Initializing WebDriver...")
+    try:
+        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        print(f"Local Chrome failed: {e}, trying remote...")
+        driver = webdriver.Chrome(
+            options=options, service=Service("/usr/bin/chromedriver")
+        )
 
     try:
-        with sync_playwright() as p:
-            print("Launching browser...")
-            browser = p.firefox.launch(headless=True)
-
-            print("Creating new page...")
-            page = browser.new_page()
-
-            print(f"Navigating to website: {website}")
-            page.goto(website, wait_until="networkidle")
-
-            print("Getting page content...")
-            html = page.content()
-
-            print("Closing browser...")
-            browser.close()
-
-            print("Successfully retrieved page content")
-            return html
-
+        print("Navigating to website...")
+        driver.get(website)
+        print("Scraping page content...")
+        html = driver.page_source
+        return html
     except Exception as e:
-        print(f"Error during scraping: {str(e)}")
+        print(f"Error during scraping: {e}")
         raise
+    finally:
+        driver.quit()
 
 
 def extract_body_content(html_content):
+    """Extract body content using BeautifulSoup"""
     soup = BeautifulSoup(html_content, "html.parser")
     body_content = soup.body
     if body_content:
@@ -46,20 +52,17 @@ def extract_body_content(html_content):
 
 
 def clean_body_content(body_content):
+    """Clean and format the body content"""
     soup = BeautifulSoup(body_content, "html.parser")
-
-    for script_or_style in soup(["script", "style"]):
-        script_or_style.extract()
-
     cleaned_content = soup.get_text(separator="\n")
     cleaned_content = "\n".join(
         line.strip() for line in cleaned_content.splitlines() if line.strip()
     )
-
     return cleaned_content
 
 
 def split_dom_content(dom_content, max_length=6000):
+    """Split content into chunks if needed"""
     return [
         dom_content[i : i + max_length] for i in range(0, len(dom_content), max_length)
     ]
