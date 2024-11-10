@@ -1,10 +1,11 @@
 import selenium.webdriver as webdriver
 from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
+import subprocess
 
 load_dotenv()
 
@@ -12,37 +13,66 @@ AUTH = os.getenv("AUTH")
 SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 
-def get_firefox_options():
-    """Configure Firefox options."""
-    options = Options()
+def find_firefox_binary():
+    """Find Firefox binary path."""
+    possible_paths = [
+        os.getenv("FIREFOX_BINARY_PATH"),
+        "/usr/bin/firefox-esr",
+        "/usr/bin/firefox",
+        "/snap/bin/firefox",
+    ]
 
-    # Essential options for running in container environment
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--width=1920")
-    options.add_argument("--height=1080")
+    for path in possible_paths:
+        if path and os.path.exists(path):
+            print(f"Found Firefox binary at: {path}")
+            return path
 
-    # Set Firefox binary location if specified
-    if os.environ.get("FIREFOX_BIN"):
-        options.binary_location = os.environ.get("FIREFOX_BIN")
+    # If not found in common locations, try using which
+    try:
+        firefox_path = (
+            subprocess.check_output(["which", "firefox-esr"]).decode().strip()
+        )
+        if firefox_path and os.path.exists(firefox_path):
+            print(f"Found Firefox binary using which at: {firefox_path}")
+            return firefox_path
+    except:
+        pass
 
-    return options
+    return None
 
 
 def scrape_website(website):
     print("\nStarting scraping process...")
 
     try:
-        options = get_firefox_options()
+        options = FirefoxOptions()
 
-        # Set up Firefox driver
-        if os.environ.get("GECKODRIVER_PATH"):
-            service = Service(executable_path=os.environ.get("GECKODRIVER_PATH"))
-        else:
-            from webdriver_manager.firefox import GeckoDriverManager
+        # Find Firefox binary
+        firefox_binary = find_firefox_binary()
+        if not firefox_binary:
+            raise Exception("Firefox binary not found!")
 
-            service = Service(GeckoDriverManager().install())
+        print(f"Using Firefox binary at: {firefox_binary}")
+        options.binary_location = firefox_binary
+
+        # Set up Firefox options
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--width=1920")
+        options.add_argument("--height=1080")
+
+        # Log Firefox version
+        try:
+            version = (
+                subprocess.check_output([firefox_binary, "--version"]).decode().strip()
+            )
+            print(f"Firefox version: {version}")
+        except:
+            print("Could not determine Firefox version")
+
+        # Set up service
+        service = Service("/usr/local/bin/geckodriver")
 
         print("Initializing Firefox WebDriver...")
         driver = webdriver.Firefox(service=service, options=options)
@@ -58,6 +88,10 @@ def scrape_website(website):
 
     except Exception as e:
         print(f"Error during scraping: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+
+        print(f"Traceback: {traceback.format_exc()}")
         raise
 
     finally:

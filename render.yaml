@@ -5,18 +5,22 @@ services:
     buildCommand: |
       # Update package lists
       apt-get update
-      # Install Firefox and GeckoDriver
+      # Install Firefox
       apt-get install -y firefox-esr
+      # Download and setup GeckoDriver
       wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
       tar -xzf geckodriver-v0.33.0-linux64.tar.gz
       chmod +x geckodriver
       mv geckodriver /usr/local/bin/
+      # Make sure Firefox is executable
+      chmod +x /usr/bin/firefox-esr
+      # Install Python dependencies
       pip install -r requirements.txt
     startCommand: python server.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
-      - key: FIREFOX_BIN
+      - key: MOZ_HEADLESS
+        value: "1"
+      - key: FIREFOX_BINARY_PATH
         value: /usr/bin/firefox-esr
-      - key: GECKODRIVER_PATH
-        value: /usr/local/bin/geckodriver
