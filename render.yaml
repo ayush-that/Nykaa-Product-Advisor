@@ -4,11 +4,16 @@ services:
     env: python
     buildCommand: |
       apt-get update
-      # Install required dependencies for Playwright
+      # Install required dependencies
       apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
+      # Install Python dependencies
       pip install -r requirements.txt
-      playwright install firefox
+      # Install Playwright browsers with specific permissions
+      playwright install --with-deps firefox
+      chmod -R 777 /opt/render/.cache/ms-playwright
     startCommand: python server.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: /opt/render/.cache/ms-playwright
