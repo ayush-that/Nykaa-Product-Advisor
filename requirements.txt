@@ -8,3 +8,4 @@ google-generativeai
 waitress
 webdriver-manager
 requests
+playwright

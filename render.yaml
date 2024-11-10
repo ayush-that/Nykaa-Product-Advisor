@@ -3,24 +3,12 @@ services:
     name: nykaa-product-advisor
     env: python
     buildCommand: |
-      # Update package lists
       apt-get update
-      # Install Firefox
-      apt-get install -y firefox-esr
-      # Download and setup GeckoDriver
-      wget https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz
-      tar -xzf geckodriver-v0.33.0-linux64.tar.gz
-      chmod +x geckodriver
-      mv geckodriver /usr/local/bin/
-      # Make sure Firefox is executable
-      chmod +x /usr/bin/firefox-esr
-      # Install Python dependencies
+      # Install required dependencies for Playwright
+      apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2
       pip install -r requirements.txt
+      playwright install firefox
     startCommand: python server.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
-      - key: MOZ_HEADLESS
-        value: "1"
-      - key: FIREFOX_BINARY_PATH
-        value: /usr/bin/firefox-esr
