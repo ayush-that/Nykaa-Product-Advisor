@@ -31,7 +31,7 @@ def scrape_website(website):
     options.add_argument("--no-first-run")
 
     print("Initializing WebDriver...")
-    service = Service(executable_path="./chromedriver")
+    service = Service(executable_path="/chromedriver")
     driver = webdriver.Chrome(service=service, options=options)
     try:
         print("Navigating to website...")
