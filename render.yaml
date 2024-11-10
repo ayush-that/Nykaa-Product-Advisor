@@ -3,16 +3,24 @@ services:
     name: nykaa-product-advisor
     env: python
     buildCommand: |
-      apt-get update && apt-get install -y chromium chromium-driver
+      # Update package lists
+      apt-get update
+      # Install wget and gnupg for Google's signing key
+      apt-get install -y wget gnupg
+      # Add Google Chrome repository
+      wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+      echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list
+      # Update package lists again
+      apt-get update
+      # Install Chrome and ChromeDriver
+      apt-get install -y google-chrome-stable chromium-chromedriver
+      # Install Python dependencies
       pip install -r requirements.txt
     startCommand: python server.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
       - key: CHROME_BIN
-        value: /usr/bin/chromium
+        value: /usr/bin/google-chrome
       - key: CHROMEDRIVER_PATH
         value: /usr/bin/chromedriver
-    packages:
-      - chromium
-      - chromium-driver

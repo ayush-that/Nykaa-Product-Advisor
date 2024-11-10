@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
-import platform
+import subprocess
+import sys
 
 load_dotenv()
 
@@ -13,55 +14,125 @@ AUTH = os.getenv("AUTH")
 SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 
+def get_chrome_path():
+    """Get the Chrome binary path."""
+    if os.environ.get("CHROME_BIN"):
+        return os.environ.get("CHROME_BIN")
+
+    chrome_paths = [
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+    ]
+
+    for path in chrome_paths:
+        if os.path.exists(path):
+            return path
+
+    try:
+        chrome_path = (
+            subprocess.check_output(
+                ["which", "google-chrome"], stderr=subprocess.STDOUT
+            )
+            .decode()
+            .strip()
+        )
+        if chrome_path:
+            return chrome_path
+    except subprocess.CalledProcessError:
+        pass
+
+    return None
+
+
 def get_chrome_options():
+    """Configure Chrome options."""
     options = Options()
+
+    chrome_path = get_chrome_path()
+    if chrome_path:
+        print(f"Using Chrome binary at: {chrome_path}")
+        options.binary_location = chrome_path
+    else:
+        print("Warning: Could not find Chrome binary!")
+
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1920x1080")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--disable-dev-tools")
+    options.add_argument("--no-first-run")
+    options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-infobars")
     options.add_argument("--disable-notifications")
-    options.add_argument("--disable-features=VizDisplayCompositor")
-    options.add_argument("--disable-dev-tools")
-    options.add_argument("--no-default-browser-check")
-    options.add_argument("--no-first-run")
-
-    # Set binary location for Render
-    if os.environ.get("CHROME_BIN"):
-        options.binary_location = os.environ.get("CHROME_BIN")
+    options.add_argument("--window-size=1920,1080")
 
     return options
 
 
-def scrape_website(website):
-    print("Setting up Chrome options...")
-    options = get_chrome_options()
-
-    print("Initializing WebDriver...")
+def get_chromedriver_path():
+    """Get the ChromeDriver path."""
     if os.environ.get("CHROMEDRIVER_PATH"):
-        # Use the system-installed chromedriver on Render
-        service = Service(executable_path=os.environ.get("CHROMEDRIVER_PATH"))
-    else:
-        # Local development fallback
-        from webdriver_manager.chrome import ChromeDriverManager
+        return os.environ.get("CHROMEDRIVER_PATH")
 
-        service = Service(ChromeDriverManager().install())
+    chromedriver_paths = [
+        "/usr/bin/chromedriver",
+        "/usr/local/bin/chromedriver",
+    ]
 
-    driver = webdriver.Chrome(service=service, options=options)
+    for path in chromedriver_paths:
+        if os.path.exists(path):
+            return path
+
+    return None
+
+
+def scrape_website(website):
+    print("\nStarting scraping process...")
+    print(f"Python version: {sys.version}")
 
     try:
-        print("Navigating to website...")
+        options = get_chrome_options()
+        chromedriver_path = get_chromedriver_path()
+        if chromedriver_path:
+            print(f"Using ChromeDriver at: {chromedriver_path}")
+            service = Service(executable_path=chromedriver_path)
+        else:
+            print("ChromeDriver path not found, falling back to webdriver_manager")
+            from webdriver_manager.chrome import ChromeDriverManager
+
+            service = Service(ChromeDriverManager().install())
+
+        print("Initializing Chrome WebDriver...")
+        driver = webdriver.Chrome(service=service, options=options)
+
+        print(f"Navigating to website: {website}")
         driver.get(website)
-        print("Scraping page content...")
+
+        print("Getting page source...")
         html = driver.page_source
+
+        print("Successfully retrieved page content")
+        return html
+
+    except Exception as e:
+        print(f"Error during scraping: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        print(f"Error details: {e.args}")
+        raise
+
     finally:
-        driver.quit()
-    return html
+        try:
+            if "driver" in locals():
+                driver.quit()
+                print("WebDriver closed successfully")
+        except Exception as e:
+            print(f"Error while closing WebDriver: {str(e)}")
 
 
-# Rest of your functions remain the same
 def extract_body_content(html_content):
     from bs4 import BeautifulSoup
 
