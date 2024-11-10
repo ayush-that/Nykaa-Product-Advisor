@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 load_dotenv()
 
@@ -31,8 +32,8 @@ def scrape_website(website):
     options.add_argument("--no-first-run")
 
     print("Initializing WebDriver...")
-    chrome_driver_path = "/usr/bin/chromedriver"
-    service = Service(executable_path=chrome_driver_path)
+    # Use webdriver_manager to handle driver installation
+    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     try:
         print("Navigating to website...")

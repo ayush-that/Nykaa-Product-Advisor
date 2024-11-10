@@ -6,3 +6,4 @@ html5lib
 python-dotenv
 google-generativeai
 waitress
+webdriver-manager
