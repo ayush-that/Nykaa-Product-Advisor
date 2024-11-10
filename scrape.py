@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
+from selenium.webdriver.chrome.options import Options
 
 load_dotenv()
 
@@ -15,16 +16,22 @@ SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 
 def scrape_website(website):
-    print("Connecting to Scraping Browser...")
-    sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, "goog", "chrome")
-    with Remote(sbr_connection, options=ChromeOptions()) as driver:
-        print("Connected! Navigating...")
+    print("Setting up Chrome options...")
+    options = Options()
+    options.headless = True
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    print("Initializing WebDriver...")
+    service = Service(executable_path="./chromedriver-win64/chromedriver.exe")
+    driver = webdriver.Chrome(service=service, options=options)
+    try:
+        print("Navigating to website...")
         driver.get(website)
-        print("Taking page screenshot to file page.png")
-        driver.get_screenshot_as_file("./page.png")
-        print("Navigated! Scraping page content...")
+        print("Scraping page content...")
         html = driver.page_source
-        return html
+    finally:
+        driver.quit()
+    return html
 
 
 def extract_body_content(html_content):
