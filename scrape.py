@@ -22,7 +22,7 @@ def scrape_website(website):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     print("Initializing WebDriver...")
-    service = Service(executable_path="./chromedriver-win64/chromedriver.exe")
+    service = Service(executable_path="/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=options)
     try:
         print("Navigating to website...")
