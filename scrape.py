@@ -1,13 +1,11 @@
 import selenium.webdriver as webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver import Remote, ChromeOptions
-from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+import platform
 
 load_dotenv()
 
@@ -15,8 +13,7 @@ AUTH = os.getenv("AUTH")
 SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 
-def scrape_website(website):
-    print("Setting up Chrome options...")
+def get_chrome_options():
     options = Options()
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
@@ -31,10 +28,29 @@ def scrape_website(website):
     options.add_argument("--no-default-browser-check")
     options.add_argument("--no-first-run")
 
+    # Set binary location for Render
+    if os.environ.get("CHROME_BIN"):
+        options.binary_location = os.environ.get("CHROME_BIN")
+
+    return options
+
+
+def scrape_website(website):
+    print("Setting up Chrome options...")
+    options = get_chrome_options()
+
     print("Initializing WebDriver...")
-    # Use webdriver_manager to handle driver installation
-    service = Service(ChromeDriverManager().install())
+    if os.environ.get("CHROMEDRIVER_PATH"):
+        # Use the system-installed chromedriver on Render
+        service = Service(executable_path=os.environ.get("CHROMEDRIVER_PATH"))
+    else:
+        # Local development fallback
+        from webdriver_manager.chrome import ChromeDriverManager
+
+        service = Service(ChromeDriverManager().install())
+
     driver = webdriver.Chrome(service=service, options=options)
+
     try:
         print("Navigating to website...")
         driver.get(website)
@@ -45,6 +61,7 @@ def scrape_website(website):
     return html
 
 
+# Rest of your functions remain the same
 def extract_body_content(html_content):
     from bs4 import BeautifulSoup
 
