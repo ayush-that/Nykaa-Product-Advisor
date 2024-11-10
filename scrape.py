@@ -18,9 +18,12 @@ SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 def scrape_website(website):
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless")  # Enable headless mode
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+
+    options.binary_location = "/usr/bin/google-chrome"
+
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     try:
