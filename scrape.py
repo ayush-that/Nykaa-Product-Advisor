@@ -1,15 +1,12 @@
-import selenium.webdriver as webdriver
-from selenium.webdriver.chrome.service import Service
-import time
-from selenium.webdriver import Remote, ChromeOptions
-from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection
-from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup
 import os
-from dotenv import load_dotenv
+import time
+import subprocess
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
-import subprocess
+from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -51,7 +48,6 @@ def scrape_website(website):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
 
-    # Find Chrome binary
     chrome_path = find_chromium_path()
     if chrome_path:
         options.binary_location = chrome_path
@@ -70,8 +66,6 @@ def scrape_website(website):
 
 
 def extract_body_content(html_content):
-    from bs4 import BeautifulSoup
-
     soup = BeautifulSoup(html_content, "html.parser")
     body_content = soup.body
     if body_content:
