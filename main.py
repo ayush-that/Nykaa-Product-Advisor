@@ -11,7 +11,7 @@ def load_css(file_name):
 st.set_page_config(
     page_title="Nykaa Product Advisor",
     page_icon="💄",
-    layout="centered",  # Change layout back to 'centered'
+    layout="centered",
     initial_sidebar_state="expanded",
 )
 
