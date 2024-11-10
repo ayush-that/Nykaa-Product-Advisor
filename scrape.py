@@ -17,18 +17,14 @@ SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
 
 
 def scrape_website(website):
-    print("Setting up Chrome options...")
     options = Options()
-    options.headless = True
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    print("Initializing WebDriver...")
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     try:
-        print("Navigating to website...")
         driver.get(website)
-        print("Scraping page content...")
         html = driver.page_source
     finally:
         driver.quit()
