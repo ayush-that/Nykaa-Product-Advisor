@@ -9,11 +9,22 @@ import os
 from dotenv import load_dotenv
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+import subprocess
 
 load_dotenv()
 
 AUTH = os.getenv("AUTH")
 SBR_WEBDRIVER = f"https://{AUTH}@zproxy.lum-superproxy.io:9515"
+
+
+def find_chromium_path():
+    try:
+        path = subprocess.check_output(["which", "google-chrome"]).decode().strip()
+        print(f"Google Chrome path: {path}")
+        return path
+    except Exception as e:
+        print(f"Error finding Google Chrome: {e}")
+        return None
 
 
 def scrape_website(website):
@@ -22,7 +33,11 @@ def scrape_website(website):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
 
-    options.binary_location = "/usr/bin/google-chrome"
+    chromium_path = find_chromium_path()
+    if chromium_path:
+        options.binary_location = chromium_path
+    else:
+        raise Exception("Google Chrome binary not found.")
 
     service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
