@@ -2,8 +2,13 @@ services:
   - type: web
     name: nykaa-product-advisor
     env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python server.py
+    buildCommand: |
+      apt-get update && \
+      apt-get install -y wget unzip && \
+      wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+      apt-get install -y ./google-chrome-stable_current_amd64.deb && \
+      pip install -r requirements.txt
+    startCommand: python app.py
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.0
